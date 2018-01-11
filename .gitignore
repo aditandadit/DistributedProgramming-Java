@@ -17,6 +17,10 @@
 *.zip
 *.tar.gz
 *.rar
-
+.idea/*.xml
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+.idea/libraries/Maven__asm_asm_3_1.xml
+miniproject_1/src/main/resources/checkstyle.xml
+*.iml
+miniproject_1/miniproject_1.iml
