@@ -53,6 +53,15 @@ public class SparkTest extends TestCase {
         }
     }
 
+    /**
+     * Generate a Single Website given min and max edges per node and edgeConfig
+     * @param i
+     * @param nNodes
+     * @param minEdgesPerNode
+     * @param maxEdgesPerNode
+     * @param edgeConfig
+     * @return
+     */
     private static Website generateWebsite(final int i, final int nNodes,
             final int minEdgesPerNode, final int maxEdgesPerNode,
             final EdgeDistribution edgeConfig) {
@@ -60,6 +69,7 @@ public class SparkTest extends TestCase {
 
         Website site = new Website(i);
 
+        // Get number of Edges based on min and max edges, and edgeConfig
         final int nEdges;
         switch (edgeConfig) {
             case INCREASING:
@@ -79,7 +89,9 @@ public class SparkTest extends TestCase {
                 throw new RuntimeException();
         }
 
+        // now we know number of Edges -> use Random to get int id of next node to add edge to
         for (int j = 0; j < nEdges; j++) {
+            // add edge from this site to r.nextInt < number of Nodes
             site.addEdge(r.nextInt(nNodes));
         }
 
@@ -152,6 +164,9 @@ public class SparkTest extends TestCase {
         return newRanks;
     }
 
+    /**
+     * Run Page Rank for n iterations
+     */
     private static void testDriver(final int nNodes, final int minEdgesPerNode,
             final int maxEdgesPerNode, final int niterations,
             final EdgeDistribution edgeConfig) {
@@ -160,17 +175,25 @@ public class SparkTest extends TestCase {
         System.err.println();
 
         final int repeats = 2;
+        // generate WebSites with given edge Info
         Website[] nodesArr = generateGraphArr(nNodes, minEdgesPerNode,
                 maxEdgesPerNode, edgeConfig);
+
+        // generate Rank array for number of Websites
         double[] ranksArr = generateRankArr(nNodes);
+
+        // run sequential Page Rank for n iterations
         for (int i = 0; i < niterations; i++) {
             ranksArr = seqPageRank(nodesArr, ranksArr);
         }
 
+        // Create Spark Context for 1 core
         JavaSparkContext context = getSparkContext(1);
 
         JavaPairRDD<Integer, Website> nodes = null;
         JavaPairRDD<Integer, Double> ranks = null;
+
+        //start the clock
         final long singleStart = System.currentTimeMillis();
         for (int r = 0; r < repeats; r++) {
             nodes = generateGraphRDD(nNodes, minEdgesPerNode,
@@ -184,9 +207,13 @@ public class SparkTest extends TestCase {
         final long singleElapsed = System.currentTimeMillis() - singleStart;
         context.stop();
 
+        // Create Context for N Cores
         context = getSparkContext(getNCores());
 
+        // Run the Same process for N Cores
         List<Tuple2<Integer, Double>> parResult = null;
+
+        // start the clock for distributed ( N cores )
         final long parStart = System.currentTimeMillis();
         for (int r = 0; r < repeats; r++) {
             nodes = generateGraphRDD(nNodes, minEdgesPerNode,
@@ -198,6 +225,8 @@ public class SparkTest extends TestCase {
             parResult = ranks.collect();
         }
         final long parElapsed = System.currentTimeMillis() - parStart;
+
+        // Speedup is Time for Single Core / Time for N cores
         final double speedup = (double)singleElapsed / (double)parElapsed;
         context.stop();
 

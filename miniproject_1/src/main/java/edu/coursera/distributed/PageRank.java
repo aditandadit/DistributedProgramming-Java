@@ -23,7 +23,7 @@ public final class PageRank {
      * Recall from lectures that given a website B with many other websites
      * linking to it, the updated rank for B is the sum over all source websites
      * of the rank of the source website divided by the number of outbound links
-     * from the source website. This new rank is damped by multiplying it bymvn mvsdfssdfsdfsdfsdfsdfsdfsdfsdfsdf
+     * from the source website. This new rank is damped by multiplying it
      * 0.85 and adding that to 0.15. Put more simply:
      *
      *   new_rank(B) = 0.15 + 0.85 * sum(rank(A) / out_count(A)) for all A linking to B

@@ -24,3 +24,8 @@ hs_err_pid*
 miniproject_1/src/main/resources/checkstyle.xml
 *.iml
 miniproject_1/miniproject_1.iml
+*.xml
+miniproject_1/.DS_Store
+.DS_Store
+*.lst
+*.txt

@@ -1,16 +1,15 @@
 package edu.coursera.distributed;
 
-import java.util.Random;
-
-import org.junit.runners.MethodSorters;
-import org.junit.FixMethodOrder;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.extensions.TestSetup;
-import junit.framework.TestSuite;
-
 import edu.coursera.distributed.util.MPI;
 import edu.coursera.distributed.util.MPI.MPIException;
+import junit.extensions.TestSetup;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import org.junit.FixMethodOrder;
+import org.junit.runners.MethodSorters;
+
+import java.util.Random;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MpiJavaTest extends TestCase {
@@ -81,10 +80,12 @@ public class MpiJavaTest extends TestCase {
 
         Matrix a, b, c;
         if (myrank == 0) {
+            // Initialize  Matrices to Multiply a * b -> c
             a = createRandomMatrix(M, N);
             b = createRandomMatrix(N, P);
             c = createRandomMatrix(M, P);
         } else {
+            // declare a,b,c in case of other Ranks -> will receive a and b from Rank 0
             a = new Matrix(M, N);
             b = new Matrix(N, P);
             c = new Matrix(M, P);
@@ -100,6 +101,8 @@ public class MpiJavaTest extends TestCase {
         }
 
         final long seqStart = System.currentTimeMillis();
+
+        // Sequential Matrix Multiply
         seqMatrixMultiply(copy_a, copy_b, copy_c);
         final long seqElapsed = System.currentTimeMillis() - seqStart;
 
@@ -110,10 +113,10 @@ public class MpiJavaTest extends TestCase {
 
         mpi.MPI_Barrier(mpi.MPI_COMM_WORLD);
 
+        // Run Parallel Matrix Multiply
         final long parallelStart = System.currentTimeMillis();
         MatrixMult.parallelMatrixMultiply(a, b, c, mpi);
         final long parallelElapsed = System.currentTimeMillis() - parallelStart;
-
 
         if (myrank == 0) {
             final double speedup = (double)seqElapsed / (double)parallelElapsed;
