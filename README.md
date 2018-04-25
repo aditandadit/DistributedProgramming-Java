@@ -5,6 +5,7 @@ Part of specialization from Rice University on Parallel, Concurrent and Distribu
 
 Week 1 --> [Distributed PageRank in Spark](miniproject_1/src/main/java/edu/coursera/distributed/PageRank.java)
 Ran Test for 20000 and 50000 nodes (ie Websites)
+
 SpeedUp achieved -> 1.35 to 1.5
 
 
