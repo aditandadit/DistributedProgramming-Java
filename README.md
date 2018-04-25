@@ -1,6 +1,6 @@
 # DistributedProgramming-Java
 
-[Coursera Verified Certificate] (https://www.coursera.org/account/accomplishments/records/RKM6FJWJ3W35)
+[Coursera Verified Certificate](https://www.coursera.org/account/accomplishments/records/RKM6FJWJ3W35)
 Part of specialization from Rice University on Parallel, Concurrent and Distributed Programming
 
 Week 1 --> [Distributed PageRank in Spark](miniproject_1/src/main/java/edu/coursera/distributed/PageRank.java)
